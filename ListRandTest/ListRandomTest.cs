@@ -1,4 +1,4 @@
-using ListRand;
+п»їusing ListRand;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
@@ -10,7 +10,7 @@ namespace ListRandTest
     {
         private readonly Random _random = new Random();
 
-        // этот тест, можно было бы разбить на несколько, для большей локализации потенциальной проблемы
+        // СЌС‚РѕС‚ С‚РµСЃС‚, РјРѕР¶РЅРѕ Р±С‹Р»Рѕ Р±С‹ СЂР°Р·Р±РёС‚СЊ РЅР° РЅРµСЃРєРѕР»СЊРєРѕ, РґР»СЏ Р±РѕР»СЊС€РµР№ Р»РѕРєР°Р»РёР·Р°С†РёРё РїРѕС‚РµРЅС†РёР°Р»СЊРЅРѕР№ РїСЂРѕР±Р»РµРјС‹
         [TestMethod]
         public void SerializeDeserializeTest()
         {
