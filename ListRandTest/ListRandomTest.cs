@@ -56,9 +56,10 @@ namespace ListRandTest
                 list.AddWithoutRandom(i.ToString());
             }
 
-            list.ForEachStoppable((node, stop) =>
+            list.ForEachStoppable((node) =>
             {
                 node.Random = list.Get(_random.Next(0, list.Count - 1));
+                return false;
             });
 
             return list;

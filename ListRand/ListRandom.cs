@@ -38,10 +38,11 @@ namespace ListRand
             }
 
             int index = 0;
-            ForEachStoppable((node, stop) =>
+            ForEachStoppable((node) =>
             {
                 node.Random = Get(IndexesOfRandom[index]);
                 index++;
+                return false;
             });
         }
 
@@ -50,16 +51,17 @@ namespace ListRand
             ListNode[] nodes = new ListNode[Count];
             int nodeIndex = 0;
 
-            ForEachStoppable((node, stop) =>
+            ForEachStoppable((node) =>
             {
                 nodes[nodeIndex] = node;
                 nodeIndex++;
+                return false;
             });
 
             return nodes;
         }
 
-        public void ForEachStoppable(Action<ListNode, bool> action)
+        public void ForEachStoppable(Func<ListNode, bool> action)
         {
             if (action == null)
             {
@@ -67,11 +69,9 @@ namespace ListRand
             }
 
             var current = Head;
-            bool stop = false;
             while (current != null)
             {
-                action.Invoke(current, stop);
-                if (stop)
+                if (action.Invoke(current))
                 {
                     return;
                 }
@@ -111,14 +111,16 @@ namespace ListRand
             ListNode resNode = null;
             int nodeIndex = 0;
 
-            ForEachStoppable((node, stop) =>
+            ForEachStoppable((node) =>
             {
+                bool stop = false;
                 if(nodeIndex == index)
                 {
                     resNode = node;
                     stop = true;
                 }
                 nodeIndex++;
+                return stop;
             });
 
             return resNode;
@@ -133,8 +135,9 @@ namespace ListRand
 
             int index = 0;
             bool result = true;
-            ForEachStoppable((node, stop) =>
+            ForEachStoppable((node) =>
             {
+                bool stop = false;
                 var otherNode = other.Get(index);
                 if (otherNode.Data != node.Data || 
                     otherNode.Random.Data != node.Random.Data)
@@ -143,6 +146,7 @@ namespace ListRand
                     result = false;
                 }
                 index++;
+                return stop;
             });
 
             return result;
