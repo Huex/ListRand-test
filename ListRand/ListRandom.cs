@@ -11,6 +11,8 @@ namespace ListRand
         public ListNode Tail = null;
         public int Count = 0;
 
+        public delegate void ForEachStoppableAction(ListNode listNode, ref bool stop);
+
         public void Serialize(Stream stream)
         {
             ListNode[] nodes = ToArray();
@@ -38,11 +40,10 @@ namespace ListRand
             }
 
             int index = 0;
-            ForEachStoppable((node) =>
+            ForEachStoppable((ListNode node, ref bool stop) =>
             {
                 node.Random = Get(IndexesOfRandom[index]);
                 index++;
-                return false;
             });
         }
 
@@ -51,17 +52,16 @@ namespace ListRand
             ListNode[] nodes = new ListNode[Count];
             int nodeIndex = 0;
 
-            ForEachStoppable((node) =>
+            ForEachStoppable((ListNode node, ref bool stop) =>
             {
                 nodes[nodeIndex] = node;
                 nodeIndex++;
-                return false;
             });
 
             return nodes;
         }
 
-        public void ForEachStoppable(Func<ListNode, bool> action)
+        public void ForEachStoppable(ForEachStoppableAction action)
         {
             if (action == null)
             {
@@ -71,7 +71,9 @@ namespace ListRand
             var current = Head;
             while (current != null)
             {
-                if (action.Invoke(current))
+                bool stop = false;
+                action.Invoke(current, ref stop);
+                if(stop)
                 {
                     return;
                 }
@@ -111,16 +113,14 @@ namespace ListRand
             ListNode resNode = null;
             int nodeIndex = 0;
 
-            ForEachStoppable((node) =>
+            ForEachStoppable((ListNode node, ref bool stop) =>
             {
-                bool stop = false;
                 if(nodeIndex == index)
                 {
                     resNode = node;
                     stop = true;
                 }
                 nodeIndex++;
-                return stop;
             });
 
             return resNode;
@@ -135,9 +135,8 @@ namespace ListRand
 
             int index = 0;
             bool result = true;
-            ForEachStoppable((node) =>
+            ForEachStoppable((ListNode node, ref bool stop) =>
             {
-                bool stop = false;
                 var otherNode = other.Get(index);
                 if (otherNode.Data != node.Data || 
                     otherNode.Random.Data != node.Random.Data)
@@ -146,7 +145,6 @@ namespace ListRand
                     result = false;
                 }
                 index++;
-                return stop;
             });
 
             return result;
